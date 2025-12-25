@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Christmas Surprise for Someone Special</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Mountains+of+Christmas:wght@400;700&family=Quicksand:wght@400;600&display=swap');
+
+        :root {
+            --christmas-red: #b91c1c;
+            --ribbon-gold: #fbbf24;
+            --soft-white: #f8fafc;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            color: var(--soft-white);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stylish-text { font-family: 'Great Vibes', cursive; }
+        .festive-title { font-family: 'Mountains of Christmas', cursive; letter-spacing: 1px; }
+
+        /* --- Snow & Decor --- */
+        .snow-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 50;
+        }
+
+        .snowman-side {
+            position: fixed; bottom: 20px; font-size: 4rem; z-index: 10;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+            animation: sway 3s ease-in-out infinite alternate;
+        }
+        .left-sm { left: 10px; }
+        .right-sm { right: 10px; }
+
+        @keyframes sway {
+            from { transform: rotate(-5deg); }
+            to { transform: rotate(5deg); }
+        }
+
+        /* --- Realistic Gift Box --- */
+        .gift-container { perspective: 1000px; cursor: pointer; margin: 40px 0; }
+        .gift-box {
+            width: 180px; height: 160px; background: var(--christmas-red);
+            position: relative; transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        }
+        .ribbon-v { position: absolute; width: 35px; height: 100%; background: var(--ribbon-gold); left: 50%; transform: translateX(-50%); z-index: 2; }
+        .ribbon-h { position: absolute; width: 100%; height: 35px; background: var(--ribbon-gold); top: 50%; transform: translateY(-50%); z-index: 2; }
+        .gift-lid {
+            position: absolute; top: -15px; left: -5px; width: 190px; height: 40px;
+            background: #991b1b; z-index: 10; transition: all 0.6s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+        }
+        .bow-knot { position: absolute; top: -25px; left: 50%; transform: translateX(-50%); width: 40px; height: 25px; background: var(--ribbon-gold); border-radius: 5px; z-index: 15; }
+        .bow-loop { position: absolute; width: 50px; height: 50px; border: 15px solid var(--ribbon-gold); border-radius: 50% 50% 0 50%; top: -45px; left: 45px; transform: rotate(45deg); }
+        .bow-loop.left { left: 85px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); }
+        .gift-box.open .gift-lid { transform: translateY(-150px) rotateX(120deg) rotateZ(30deg); opacity: 0; }
+
+        /* --- Transitions --- */
+        .section { display: none; opacity: 0; transform: scale(0.9); transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+        .section.active { display: flex; opacity: 1; transform: scale(1); }
+
+        .word-card {
+            background: white; color: var(--christmas-red); width: 85px; height: 110px;
+            display: flex; align-items: center; justify-content: center; border-radius: 12px;
+            font-size: 1.5rem; font-weight: bold; cursor: pointer; border: 3px solid var(--ribbon-gold);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: all 0.4s ease;
+        }
+        .word-card.revealed { background: #fefce8; transform: translateY(-10px) rotateY(360deg); }
+
+        .final-scroll {
+            background: #fff9eb; color: #1f2937; padding: 30px; border-radius: 5px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5); max-width: 420px; width: 90%;
+            border-left: 10px solid var(--christmas-red); position: relative; overflow: visible;
+        }
+        .quote-line { opacity: 0; transform: translateY(10px); transition: all 0.5s ease; }
+        .quote-line.visible { opacity: 1; transform: translateY(0); }
+
+        /* --- Santa --- */
+        .santa-container {
+            position: absolute; top: -100px; right: -40px; width: 120px; height: 120px;
+            display: none; flex-direction: column; align-items: center; z-index: 100;
+        }
+        .santa-container.active { display: flex; animation: santaAppear 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        .santa-emoji { font-size: 4rem; animation: santaWave 1.5s ease-in-out infinite; }
+        .speech-bubble {
+            background: white; color: red; border: 2px solid red; padding: 2px 10px;
+            border-radius: 10px; font-weight: bold; position: relative; margin-bottom: -10px;
+        }
+        @keyframes santaAppear { 0% { transform: scale(0) rotate(-45deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+        @keyframes santaWave { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(15deg); } }
+    </style>
+</head>
+<body>
+
+    <canvas id="snowCanvas" class="snow-canvas"></canvas>
+    <div class="snowman-side left-sm">☃️</div>
+    <div class="snowman-side right-sm">☃️</div>
+
+    <div id="section1" class="section active flex-col items-center gap-8 text-center p-4">
+        <h1 class="stylish-text text-6xl md:text-8xl text-red-500 drop-shadow-md">For Someone Special...</h1>
+        <div class="gift-container" onclick="openBox()">
+            <div id="box" class="gift-box">
+                <div class="ribbon-v"></div><div class="ribbon-h"></div>
+                <div class="gift-lid"><div class="bow-knot"></div><div class="bow-loop"></div><div class="bow-loop left"></div></div>
+            </div>
+        </div>
+        <p class="festive-title text-2xl animate-pulse text-yellow-400">Tap the box to open your gift!</p>
+    </div>
+
+    <div id="section2" class="section flex-col items-center gap-10 text-center p-4">
+        <h2 class="stylish-text text-5xl md:text-7xl text-yellow-200">"There is something special for you"</h2>
+        <button onclick="goTo(2, 3)" class="bg-white text-red-700 px-12 py-4 rounded-full font-bold text-2xl shadow-2xl transition festive-title">Open It</button>
+    </div>
+
+    <div id="section3" class="section flex-col items-center gap-10 text-center p-4">
+        <h2 class="stylish-text text-6xl text-blue-200">Just for you</h2>
+        <div class="flex flex-wrap justify-center gap-3">
+            <div class="word-card stylish-text" onclick="flip(this, 'You')">?</div>
+            <div class="word-card stylish-text" onclick="flip(this, 'Are')">?</div>
+            <div class="word-card stylish-text" onclick="flip(this, 'My')">?</div>
+            <div class="word-card stylish-text" onclick="flip(this, 'Favourite')">?</div>
+            <div class="word-card stylish-text" onclick="flip(this, 'Gift')">?</div>
+        </div>
+        <div id="btnContainer3" class="hidden opacity-0 transition-opacity duration-1000">
+            <button onclick="goTo(3, 4)" class="bg-green-600 text-white px-10 py-3 rounded-full festive-title text-xl">One more thing...</button>
+        </div>
+    </div>
+
+    <div id="section4" class="section flex-col items-center gap-8 text-center p-4">
+        <h2 class="stylish-text text-5xl md:text-7xl text-red-400">Merry Christmas to my cutie pie</h2>
+        <div class="final-scroll" id="finalCard" onclick="revealQuotes()">
+            <div id="santaPopup" class="santa-container"><div class="speech-bubble">Hii! 🎅</div><div class="santa-emoji">🎅</div></div>
+            <div id="cover" class="py-10"><p class="stylish-text text-3xl text-red-700 cursor-pointer">Tap to reveal my heart</p><div class="animate-bounce mt-4 text-3xl">💌</div></div>
+            <div id="quotes" class="hidden text-left space-y-4">
+                <p class="quote-line text-sm italic border-l-4 border-red-500 pl-3">“A best friend is like a four-leaf clover: hard to find and lucky to have.”</p>
+                <p class="quote-line text-sm italic border-l-4 border-green-500 pl-3">“You’re my favorite person to do nothing with.”</p>
+                <p class="quote-line text-sm italic border-l-4 border-yellow-500 pl-3">“Life is better with a best friend like you.”</p>
+                <p class="quote-line text-sm italic border-l-4 border-blue-500 pl-3">“Forever my bestie.”</p>
+                <p class="quote-line text-sm italic border-l-4 border-purple-500 pl-3">“Grateful for you, always.”</p>
+                <p class="quote-line text-sm italic border-l-4 border-pink-500 pl-3">“Best friends = chosen family.”</p>
+                <div class="mt-6 pt-4 border-t border-gray-200 text-center">
+                    <p class="stylish-text text-4xl text-red-700">Thank you for being my friend</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Snow
+        const canvas = document.getElementById('snowCanvas'); const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+        class Snowflake {
+            constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 4 + 1; this.speed = Math.random() * 1.5 + 0.5; this.wind = Math.random() * 0.5 - 0.25; }
+            update() { this.y += this.speed; this.x += this.wind; if (this.y > canvas.height) { this.y = -10; this.x = Math.random() * canvas.width; } }
+            draw() { ctx.fillStyle = 'white'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 200; i++) particles.push(new Snowflake());
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
+        animate();
+
+        // Logic
+        function openBox() { document.getElementById('box').classList.add('open'); setTimeout(() => goTo(1, 2), 1000); }
+        function goTo(from, to) {
+            const f = document.getElementById('section' + from); const t = document.getElementById('section' + to);
+            f.style.opacity = '0'; f.style.transform = 'scale(0.8)';
+            setTimeout(() => { f.classList.remove('active'); t.classList.add('active'); }, 600);
+        }
+        let revealed = 0;
+        function flip(el, text) {
+            if (el.classList.contains('revealed')) return;
+            el.textContent = text; el.classList.add('revealed'); revealed++;
+            if (revealed === 5) { const b = document.getElementById('btnContainer3'); b.classList.remove('hidden'); setTimeout(() => b.style.opacity = '1', 100); }
+        }
+        function revealQuotes() {
+            if (document.getElementById('quotes').classList.contains('revealed-final')) return;
+            document.getElementById('santaPopup').classList.add('active');
+            setTimeout(() => {
+                document.getElementById('cover').classList.add('hidden');
+                const q = document.getElementById('quotes'); q.classList.remove('hidden'); q.classList.add('revealed-final');
+                document.querySelectorAll('.quote-line').forEach((line, i) => setTimeout(() => line.classList.add('visible'), i * 400));
+            }, 800);
+        }
+    </script>
+</body>
+</html>
+
